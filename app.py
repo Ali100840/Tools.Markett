@@ -11,6 +11,8 @@ products = {
     2: ["hammer", 15]
 }
 
+CSV_FILE = os.path.join("tem", "bills.csv")  # ملف CSV داخل مجلد tem
+
 @app.route("/")
 def index():
     return render_template("index.html", products=products)
@@ -43,14 +45,13 @@ def generate_bill():
                 })
                 total_all += total
 
-        csv_file = "/tmp/bills.csv"
-
-        # إذا الملف مش موجود، أضف الرأس
-        file_exists = os.path.isfile(csv_file)
-        with open(csv_file, mode="a", newline="", encoding="utf-8") as file:
-            writer = csv.writer(file)
+        # إنشاء الملف إذا لم يكن موجود
+        file_exists = os.path.isfile(CSV_FILE)
+        with open(CSV_FILE, mode="a", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
             if not file_exists:
                 writer.writerow(["Name", "Phone", "Location", "Total", "Qty", "Price", "Product", "Date"])
+
             for item in bill:
                 writer.writerow([
                     name,
@@ -69,10 +70,4 @@ def generate_bill():
             "date": datetime.now().strftime("%d-%m-%Y"),
             "name": name,
             "phone": phone,
-            "location": location
-        })
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
-if _name_ == "_main_":
-    app.run(debug=True)
+            "location":
