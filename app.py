@@ -41,22 +41,33 @@ def generate_bill():
             total_all += total
 
     # فتح ملف إكسل موجود
-    wb = load_workbook('/tmp/ALI(2).xlsx')
-    ws = wb.active
+ excel_file = '/tmp/ALI(2).xlsx'  # تأكد من استخدام /tmp
 
-    # إضافة بيانات الفاتورة للسطر
-    for item in bill:
-        ws.append([
-            name,
-            phone,
-            location,
-            item["total"],
-            item["qty"],
-            item["price"],
-            item["name"],
-            
-            datetime.now().strftime("%Y-%m-%d")
-        ])
+# تحقق إذا الملف موجود
+if os.path.exists(excel_file):
+    wb = load_workbook(excel_file)
+    ws = wb.active
+else:
+    wb = Workbook()
+    ws = wb.active
+    # أضف رؤوس الأعمدة فقط إذا الملف جديد
+    ws.append(["Name", "Phone", "Location", "Total", "Qty", "Price", "Product", "Date"])
+
+# هذا الكود لازم يتنفذ دائمًا، مش فقط لو الملف جديد
+for item in bill:
+    ws.append([
+        name,
+        phone,
+        location,
+        item["total"],
+        item["qty"],
+        item["price"],
+        item["name"],
+        datetime.now().strftime("%Y-%m-%d")
+    ])
+
+# احفظ الملف دايمًا
+wb.save(excel_file)
 
     # حفظ الملف بعد التعديل
     wb.save('ALI(2).xlsx')
