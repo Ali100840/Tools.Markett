@@ -3,7 +3,7 @@ from datetime import datetime
 from openpyxl import Workbook, load_workbook
 import os
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 products = {
     0: ["saw", 10],
