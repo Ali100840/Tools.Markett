@@ -41,7 +41,7 @@ def generate_bill():
             total_all += total
 
     # فتح ملف إكسل موجود
-    wb = load_workbook('ALI(2).xlsx')
+    wb = load_workbook('/tmp/ALI(2).xlsx')
     ws = wb.active
 
     # إضافة بيانات الفاتورة للسطر
