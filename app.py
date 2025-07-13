@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request, jsonify
 from datetime import datetime
-from openpyxl import Workbook, load_workbook
 import os
+import csv
 
-app = Flask(__name__)
+app = Flask(_name_)
 
 products = {
     0: ["saw", 10],
@@ -43,29 +43,25 @@ def generate_bill():
                 })
                 total_all += total
 
-        excel_file = '/tmp/ALI(2).xlsx'  # تأكد من استخدام /tmp في Render
+        csv_file = "/tmp/bills.csv"
 
-        if os.path.exists(excel_file):
-            wb = load_workbook(excel_file)
-            ws = wb.active
-        else:
-            wb = Workbook()
-            ws = wb.active
-            ws.append(["Name", "Phone", "Location", "Total", "Qty", "Price", "Product", "Date"])
-
-        for item in bill:
-            ws.append([
-                name,
-                phone,
-                location,
-                item["total"],
-                item["qty"],
-                item["price"],
-                item["name"],
-                datetime.now().strftime("%Y-%m-%d")
-            ])
-
-        wb.save(excel_file)
+        # إذا الملف مش موجود، أضف الرأس
+        file_exists = os.path.isfile(csv_file)
+        with open(csv_file, mode="a", newline="", encoding="utf-8") as file:
+            writer = csv.writer(file)
+            if not file_exists:
+                writer.writerow(["Name", "Phone", "Location", "Total", "Qty", "Price", "Product", "Date"])
+            for item in bill:
+                writer.writerow([
+                    name,
+                    phone,
+                    location,
+                    item["total"],
+                    item["qty"],
+                    item["price"],
+                    item["name"],
+                    datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                ])
 
         return jsonify({
             "bill": bill,
@@ -77,3 +73,6 @@ def generate_bill():
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+if _name_ == "_main_":
+    app.run(debug=True)
