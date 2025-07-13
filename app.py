@@ -3,7 +3,7 @@ from datetime import datetime
 import os
 import csv
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 products = {
     0: ["saw", 10],
